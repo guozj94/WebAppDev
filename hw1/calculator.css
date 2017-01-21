@@ -25,6 +25,11 @@ button {
 	justify-content: flex-start;
 
 }
+.inner {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+}
 .display {
 	text-align: right;
 	vertical-align: middle;

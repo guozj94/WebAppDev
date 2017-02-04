@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Calculator</title>
+	<link href="static/calculator/calculator.css" rel="stylesheet">
+</head>
+<body>
+
+<form method="POST">
+	<input type="hidden" name="prev_val" value="{{prev_val}}">
+	<input type="hidden" name="curr_val" value="{{curr_val}}">
+	<input type="hidden" name="prev_operator" value="{{prev_operator}}">
+
+	<div class="display" id="display">0</div>
+	<div class="inner">
+		<div class="row">
+			<button class="number" name="number" type="submit" id="7">7</button>
+			<button class="number" name="number" type="submit" id="8">8</button>
+			<button class="number" name="number" type="submit" id="9">9</button>
+			<button class="sign" id="plus" name="sign" type="submit">+</button>
+		</div>
+		<div class="row">
+			<button class="number" name="number" type="submit" id="4">4</button>
+			<button class="number" name="number" type="submit" id="5">5</button>
+			<button class="number" name="number" type="submit" id="6">6</button>
+			<button class="sign" name="sign" type="submit" id="minus">-</button>
+		</div>
+		<div class="row">
+			<button class="number" name="number" type="submit" id="1">1</button>
+			<button class="number" name="number" type="submit" id="2">2</button>
+			<button class="number" name="number" type="submit" id="3">3</button>
+			<button class="sign" name="sign" type="submit" id="multi">&times;</button>
+		</div>
+		<div class="row">
+			<button class="number" id="empty"></button>
+			<button class="number" type="submit" name="number" id="0">0</button>
+			<button class="sign" name="sign" type="submit" id="equal">=</button>
+			<button class="sign" name="sign" type="submit" id="divide">&divide;</button>
+		</div>
+	</div>
+	{% csrf_token %}
+</form>
+
+</body>
+</html>

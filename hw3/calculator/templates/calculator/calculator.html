@@ -7,36 +7,36 @@
 </head>
 <body>
 
-<form method="POST">
+<form method="POST" action="calculator">
 	<input type="hidden" name="prev_val" value="{{prev_val}}">
 	<input type="hidden" name="curr_val" value="{{curr_val}}">
 	<input type="hidden" name="prev_operator" value="{{prev_operator}}">
 
-	<div class="display" id="display">0</div>
+	<div class="display" name="display" id="display">{{display_val}}</div>
 	<div class="inner">
 		<div class="row">
-			<button class="number" name="number" type="submit" id="7">7</button>
-			<button class="number" name="number" type="submit" id="8">8</button>
-			<button class="number" name="number" type="submit" id="9">9</button>
-			<button class="sign" id="plus" name="sign" type="submit">+</button>
+			<button class="number" name="number" type="submit" id="7" value="7">7</button>
+			<button class="number" name="number" type="submit" id="8" value="8">8</button>
+			<button class="number" name="number" type="submit" id="9" value="9">9</button>
+			<button class="sign" id="plus" name="sign" type="submit" value="+">+</button>
 		</div>
 		<div class="row">
-			<button class="number" name="number" type="submit" id="4">4</button>
-			<button class="number" name="number" type="submit" id="5">5</button>
-			<button class="number" name="number" type="submit" id="6">6</button>
-			<button class="sign" name="sign" type="submit" id="minus">-</button>
+			<button class="number" name="number" type="submit" id="4" value="4">4</button>
+			<button class="number" name="number" type="submit" id="5" value="5">5</button>
+			<button class="number" name="number" type="submit" id="6" value="6">6</button>
+			<button class="sign" name="sign" type="submit" id="minus" value="-">-</button>
 		</div>
 		<div class="row">
-			<button class="number" name="number" type="submit" id="1">1</button>
-			<button class="number" name="number" type="submit" id="2">2</button>
-			<button class="number" name="number" type="submit" id="3">3</button>
-			<button class="sign" name="sign" type="submit" id="multi">&times;</button>
+			<button class="number" name="number" type="submit" id="1" value="1">1</button>
+			<button class="number" name="number" type="submit" id="2" value="2">2</button>
+			<button class="number" name="number" type="submit" id="3" value="3">3</button>
+			<button class="sign" name="sign" type="submit" id="multi" value="*">&times;</button>
 		</div>
 		<div class="row">
 			<button class="number" id="empty"></button>
-			<button class="number" type="submit" name="number" id="0">0</button>
-			<button class="sign" name="sign" type="submit" id="equal">=</button>
-			<button class="sign" name="sign" type="submit" id="divide">&divide;</button>
+			<button class="number" type="submit" name="number" id="0" value="0">0</button>
+			<button class="sign" name="sign" type="submit" id="equal" value="=">=</button>
+			<button class="sign" name="sign" type="submit" id="divide" value="/">&divide;</button>
 		</div>
 	</div>
 	{% csrf_token %}

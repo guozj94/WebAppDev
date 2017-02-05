@@ -27,7 +27,6 @@ def add_to_context(prev_val, curr_val, prev_operator, is_equal, double_operator,
 
 
 def calculator(request):
-
 	prev_val = request.POST['prev_val']
 	curr_val = request.POST['curr_val']
 	prev_operator = request.POST['prev_operator']
@@ -68,7 +67,6 @@ def calculator(request):
 			return render(request, 'calculator/calculator.html', context)
 
 	if (request.POST.get('sign', False) in ['+', '-', '*', '/']) and (double_operator == 'False'):
-		print 'execute?'
 		equation = equation + request.POST.get('sign', False)
 		if prev_operator == '+':
 			result = prev_val + curr_val
@@ -126,11 +124,4 @@ def calculator(request):
 				context = add_to_context(0, 0, '+', False, False, result, equation)
 				return render(request, 'calculator/calculator.html', context)
 
-
 	return render(request, 'calculator/calculator.html', {})
-
-	# if request.POST['number']:
-	# 	# print error_info
-	# 	print request.POST
-	# 	context['display_val'] = request.POST['number']
-	# 	return render(request, 'calculator/calculator.html', context)

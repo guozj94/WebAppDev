@@ -8,9 +8,13 @@
 <body>
 
 <form method="POST" action="calculator">
+	<h1>{{error_info}}</h1>
 	<input type="hidden" name="prev_val" value="{{prev_val}}">
 	<input type="hidden" name="curr_val" value="{{curr_val}}">
 	<input type="hidden" name="prev_operator" value="{{prev_operator}}">
+	<input type="hidden" name="is_equal" value="{{is_equal}}">
+	<input type="hidden" name="double_operator" value="{{double_operator}}">
+	<input type="hidden" name="equation" value="{{equation}}">
 
 	<div class="display" name="display" id="display">{{display_val}}</div>
 	<div class="inner">

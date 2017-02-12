@@ -1,0 +1,89 @@
+<!doctype HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/static/socialnetwork/animate.css">
+	<link rel="stylesheet" href="/static/socialnetwork/global.css">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans" />
+	<title>SocialNet-Register</title>
+</head>
+
+<body>
+	<header>
+		<nav>
+			<ul>
+				<li>
+					<a href="">Welcome to Social Web</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<div class="container">
+	<div class="left-col-container">
+		<div class="column">
+			<table>
+				<tr>
+					<td>First Name:</td>
+					<td>{{fname}}</td>
+				</tr>
+				<tr>
+					<td>Last Name:</td>
+					<td>{{lname}}</td>
+				</tr>
+				<tr>
+					<td>Total Post:</td>
+					<td>{{totalpost}}</td>
+				</tr>
+			</table>	
+		</div>
+	</div>
+
+	<div class="right-col-container">
+
+		<ol> <!-- this is an example of messages -->
+		<li>
+		<div class="column">
+			<div class="row" id="personal">
+				<p>Donald</p>
+				<p>&nbsp</p>
+				<p>Trump</p>
+				<p>&nbsp &nbsp</p>
+				<form><input type="submit" name="username" value="potus"></form>
+				<p>&nbsp &nbsp</p>
+				<p style="color: grey; font-weight: lighter;">Time</p>
+			</div>
+			<div class="row" id="content">
+				<p>I dont want to be the president of the united states of america</p>
+			</div>
+		</div>
+		</li>
+		</ol>
+
+		<ol>  <!-- insert all message HERE -->
+		{% for message in messages %}
+		<li>
+			<div class="column"> <!-- this is data from django database -->
+				<div class="row" id="personal">
+					<p>{{message.fname}}</p>
+					<p>&nbsp</p>
+					<p>{{message.lname}}</p>
+					<p>&nbsp &nbsp</p>
+					<p>{{message.username}}</p>
+					<p>&nbsp &nbsp</p>
+					<p style="color: grey; font-weight: lighter;">{{message.date}}</p>
+				</div>
+				<div class="row" id="content">
+					<p>{{message.content}}</p>
+				</div>
+			</div>
+		</li>
+		{% endfor %}
+		</ol>
+
+	</div>
+	</div>
+
+</body>
+</html>

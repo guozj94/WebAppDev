@@ -1,0 +1,58 @@
+<!doctype HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/static/socialnetwork/animate.css">
+	<link rel="stylesheet" href="/static/socialnetwork/register.css">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans" />
+	<title>SocialNet-Register</title>
+</head>
+
+<body>
+	<div class="column-container">
+		<div class="row" id="placeholder"></div>
+		<div class="row" id="welcome">
+			<h1>Welcome to Our Social Web</h1>
+		</div>
+		<div class="row">
+			<h3>Register Now!</h3>
+		</div>
+		{% for error in errors %}
+        	<p>
+            	{{ error }}
+        	</p>
+    	{% endfor %}
+		<div class="row" id="register-info">
+			<form method="post" action="register">
+				<table width="400">
+        			<tr>
+            			<td><label>Username:</label></td>
+            			<td><input type="text" name="username" value="{{username}}" autofocus></td>
+        			</tr>
+        			<tr>
+        				<td><label>First Name:</label></td>
+        				<td><input type="text" name="fname" value="{{fname}}"></td>
+        			</tr>
+        			<tr>
+        				<td><label>Last Name:</label></td>
+        				<td><input type="text" name="lname" value="{{lname}}"></td>
+        			</tr>
+       				<tr>
+            			<td><label>Password:</label></td>
+            			<td><input type="password" name="password1"></td>
+        			</tr>
+        			<tr>
+            			<td><label>Confirm password:<label></td>
+            			<td><input type="password" name="password2"></td>
+        			</tr>
+        		</table>
+				<div class="row">	
+					<input type="submit" value="Register" id="register-button">
+				</div>
+				{% csrf_token %}
+			</form>
+		</div>
+	</div>
+</body>
+</html>

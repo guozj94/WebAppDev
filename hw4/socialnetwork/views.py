@@ -83,7 +83,7 @@ def profile(request):
 		#print p.first_name, p.last_name
 		all_info.append({'fname': p.first_name, 'lname': p.last_name, 'date': p.date, 'post': p.post, 'username': p.username})
 	print all_info[0]
-	context = {'messages': all_info}
+	context = {'messages': all_info, 'lname': all_info[0]['lname'], 'fname': all_info[0]['fname'], 'totalpost': len(all_info)}
 
 	return render(request, 'socialnetwork/profile.html', context)
 

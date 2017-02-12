@@ -4,7 +4,7 @@ from socialnetwork import views as socialnetwork_views
 
 urlpatterns = [
     url(r'^$', socialnetwork_views.home, name='home'),
-    #url(r'^search$', socialnetwork_views.search, name='search'),
+    url(r'^global$', socialnetwork_views.home, name='global'),
     url(r'^create$', socialnetwork_views.create, name='create'),
     #url(r'^register$', socialnetwork_views.register, name='register'),
     # Route for built-in authentication with our own custom login page

@@ -64,23 +64,23 @@ header nav {
 	flex-direction: row;
 	justify-content: flex-start;
 	width: 80vw;
-	border: solid 2px black;
-}
+/*	border: solid 2px black;
+*/}
 .left-col-container {
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	width: 30%;
-	border: solid 2px black;
-	padding: 20px;
+/*	border: solid 2px black;
+*/	padding: 20px;
 }
 .right-col-container {
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	width: 70%;
-	border: solid 2px black;
-	padding: 20px;
+/*	border: solid 2px black;
+*/	padding: 20px;
 }
 .column {
 	display: flex;

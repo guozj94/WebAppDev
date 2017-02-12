@@ -74,13 +74,16 @@ def create(request):
 
 @login_required
 def profile(request):
-	objects = Messages.objects.filter(user_id=request.user.id)
-
-	if messages.count() == 0:
+	if not 'username' in request.POST:
 		return render(request, 'socialnetwork/profile.html', {})
 
-	if messages.count() >= 1:
-		context = {'messages': messages.order_by('date')}
+	username = request.POST['username']
+	all_info = []
+	for p in Messages.objects.raw('SELECT * FROM socialnetwork_messages,auth_user WHERE socialnetwork_messages.user_id=auth_user.id AND auth_user.username = %s ORDER BY socialnetwork_messages.date DESC', [username]):
+		#print p.first_name, p.last_name
+		all_info.append({'fname': p.first_name, 'lname': p.last_name, 'date': p.date, 'post': p.post, 'username': p.username})
+	print all_info[0]
+	context = {'messages': all_info}
 
 	return render(request, 'socialnetwork/profile.html', context)
 

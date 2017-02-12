@@ -66,7 +66,7 @@
 		<ol>  <!-- insert all message HERE -->
 		{% for message in messages %}
 		<li>
-		<form method="post" action="profile">
+		<form method="post" action="/socialnetwork/profile">
 			<div class="column"> <!-- this is data from django database -->
 				<div class="row" id="personal">
 					<p>{{message.fname}}</p>
@@ -81,6 +81,7 @@
 					<p>{{message.post}}</p>
 				</div>
 			</div>
+			{% csrf_token %}
 			</form>
 		</li>
 		{% endfor %}

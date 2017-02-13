@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
+#Message class saves all post message
 class Messages(models.Model):
 	user = models.ForeignKey(User, default=None)
 	post = models.TextField(max_length=200)

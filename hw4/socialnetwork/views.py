@@ -1,90 +1,71 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 
+#import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 
+#import transaction
 from django.db import transaction
 
+#import model
 from socialnetwork.models import *
 
+#use time
 from datetime import datetime
 import time
 
 # Create your views here.
 @login_required
-#need query
+#display all posts on the home page
 def home(request):
-	# messages = Messages.objects.all()
-	# print messages
-
-	# if messages.count() == 0:
-	# 	return render(request, 'socialnetwork/global.html', {})
-
-	# if messages.count() >= 1:
-	# 	context = {'messages': messages.order_by('-date')}
-
-	# return render(request, 'socialnetwork/global.html', context)
 	all_info = []
+	#join query
 	for p in Messages.objects.raw('SELECT * FROM socialnetwork_messages,auth_user WHERE socialnetwork_messages.user_id=auth_user.id ORDER BY socialnetwork_messages.date DESC'):
-		#print p.first_name, p.last_name
 		all_info.append({'fname': p.first_name, 'lname': p.last_name, 'date': p.date, 'post': p.post, 'username': p.username})
-	print all_info[0]
-	# while count_msg < messages.count():
-	# 	while count_usr < user_info.count():
-	# 		if messages[count_msg].user_id == user_info[count_usr].id:
-	# 			messages[count_msg].fname = user_info[count_usr].first_name
-	# 			messages[count_msg].lname = user_info[count_usr].last_name
-	# 			messages[count_msg].username = user_info[count_usr].username
-	# 		count_usr += 1
-	# 	count_msg += 1
-	# print user_info[0].first_name
-	# print context
+	#return messages and insert into html
 	context = {'messages': all_info}
 	return render(request, 'socialnetwork/global.html', context)
 
 @login_required
+#create new post, and render the homepage
 def create(request):
-	if not 'input-content' in request.POST:
-		return render(request, 'socialnetwork/global.html', {})
+	if not request.POST['input-content']:
+		print 'no content'
+	else:
+		#create a new instance of Messages
+		print 'create new content'
+		message = Messages()
+		message.user = request.user
+		message.post = request.POST['input-content'][:200]
+		message.save()
 
-	message = Messages()
-	message.user = request.user
-	print request.user
-	message.post = request.POST['input-content'][:200]
-	message.save()
+	#get all post in database
 	all_info = []
 	for p in Messages.objects.raw('SELECT * FROM socialnetwork_messages,auth_user WHERE socialnetwork_messages.user_id=auth_user.id ORDER BY socialnetwork_messages.date DESC'):
-		#print p.first_name, p.last_name
 		all_info.append({'fname': p.first_name, 'lname': p.last_name, 'date': p.date, 'post': p.post, 'username': p.username})
-	print all_info[0]
-	# while count_msg < messages.count():
-	# 	while count_usr < user_info.count():
-	# 		if messages[count_msg].user_id == user_info[count_usr].id:
-	# 			messages[count_msg].fname = user_info[count_usr].first_name
-	# 			messages[count_msg].lname = user_info[count_usr].last_name
-	# 			messages[count_msg].username = user_info[count_usr].username
-	# 		count_usr += 1
-	# 	count_msg += 1
-	# print user_info[0].first_name
-	# print context
+	
+	#return messages and insert into html
 	context = {'messages': all_info}
 	return render(request, 'socialnetwork/global.html', context)
 
 @login_required
+#display user's profile
 def profile(request):
 	if not 'username' in request.POST:
 		return render(request, 'socialnetwork/profile.html', {})
 
+	#get the username
 	username = request.POST['username']
+
+	#search all posts posted by that user
 	all_info = []
 	for p in Messages.objects.raw('SELECT * FROM socialnetwork_messages,auth_user WHERE socialnetwork_messages.user_id=auth_user.id AND auth_user.username = %s ORDER BY socialnetwork_messages.date DESC', [username]):
-		#print p.first_name, p.last_name
 		all_info.append({'fname': p.first_name, 'lname': p.last_name, 'date': p.date, 'post': p.post, 'username': p.username})
-	print all_info[0]
+	
+	#return messages and insert into html
 	context = {'messages': all_info, 'lname': all_info[0]['lname'], 'fname': all_info[0]['fname'], 'totalpost': len(all_info)}
-
 	return render(request, 'socialnetwork/profile.html', context)
 
 

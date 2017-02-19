@@ -9,7 +9,7 @@ urlpatterns = [
     #follow a user
     #url(r'^follow$', socialnetwork_views.follow, name='follow'),
     #show all followers
-    #url(r'^followstream$', socialnetwork_views.followstream, name='followstream'),
+    url(r'^followstream$', socialnetwork_views.followstream, name='followstream'),
     #create new post
     url(r'^create$', socialnetwork_views.create, name='create'),
     #route to login page
@@ -20,5 +20,6 @@ urlpatterns = [
     url(r'^profile$', socialnetwork_views.profile, name='profile'),
     url(r'^editprofile$', socialnetwork_views.editprofile, name='editprofile'),
     #route to register page
-    url(r'^register$', socialnetwork_views.register, name='register')
+    url(r'^register$', socialnetwork_views.register, name='register'),
+    url(r'^photo/(?P<id>\d+)$', socialnetwork_views.get_photo, name='photo'),
 ]

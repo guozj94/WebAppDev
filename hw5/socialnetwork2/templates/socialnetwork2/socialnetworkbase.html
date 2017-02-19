@@ -16,10 +16,16 @@
 					<a href="">Welcome to Social Web</a>
 				</li>
 				<li>
-					<a href="/socialnetwork2/global">Home</a>
+					<a href="{% url 'global' %}">Home</a>
 				</li>
 				<li>
-					<a href="/socialnetwork2/editprofile">Edit Profile</a>
+					<a href="{% url 'editprofile' %}">Edit Profile</a>
+				</li>
+				<li>
+					<a href="{% url 'followstream' %}">Following</a>
+				</li>
+				<li>
+					<a href="{% url 'logout' %}">Logout</a>
 				</li>
 			</ul>
 		</nav>
@@ -29,7 +35,9 @@
 		<div class="left-col-container">
 			<div class="column">
 				<div class="row">
+					<img src="{% url 'photo' profile.user__user_id" width="150px">
 				</div>
+				<br>
 				<table>
 					<tr>
 						<td>First Name:</td>
@@ -41,11 +49,11 @@
 					</tr>
 					<tr>
 						<td>Age:</td>
-						<td>{{age}}</td>
+						<td>{{profile.age}}</td>
 					</tr>
 					<tr>
 						<td>Bio:</td>
-						<td>{{bio}}</td>
+						<td>{{profile.bio}}</td>
 					</tr>
 				</table>	
 			</div>
@@ -69,6 +77,11 @@
 								<button type="submit" name="username" id="username" value="{{message.user__username}}">{{message.user__username}}</button>
 								<p>&nbsp &nbsp</p>
 								<p style="color: grey; font-weight: 300;">{{message.date}}</p>
+								<p>&nbsp &nbsp &nbsp</p>
+								<button type="submit" name="follow" id="username" value="Follow">Follow</button>
+								<p>&nbsp &nbsp &nbsp</p>
+								<button type="submit" name="unfollow" id="username" value="Unfollow">Unfollow</button>
+								<input type="hidden" name="followuser" value="{{message.user__username}}">
 							</div>
 							<div class="row" id="content">
 								<p>{{message.post}}</p>

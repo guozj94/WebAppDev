@@ -21,6 +21,10 @@ class Profile(models.Model):
 	picture = models.FileField(upload_to="images", blank=True)
 	content_type = models.CharField(max_length=50)
 
+class Follow(models.Model):
+	user = models.ForeignKey(User, default=None)
+	follows = models.CharField(max_length=20)
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

@@ -29,7 +29,7 @@ class RegistrationForm(forms.Form):
 class EditProfile(forms.ModelForm):
 	class Meta:
 		model = Profile
-		exclude = ('user', 'content_type',)
+		fields = ('age', 'bio', 'picture')
 
 	def clean_profile(self):
 		picture = self.cleaned_data['picture']

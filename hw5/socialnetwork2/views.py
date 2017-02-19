@@ -27,12 +27,9 @@ from django.template import RequestContext
 @login_required
 def home(request):
 	all_info = []
-	all_info = Messages.objects.values('user_id', 'post', 'date', 'user__last_name', 'user__first_name', 'user__username')
-	all_info.order_by('-date')
+	all_info = Messages.objects.values('user_id', 'post', 'date', 'user__last_name', 'user__first_name', 'user__username').order_by('-date')
 	profile = Profile.objects.filter(user=request.user).values('user__last_name', 'user__first_name', 'user__username', 'age', 'bio')
-	#print profile
 	context = {'messages': all_info, 'profile': profile[0]}
-	print profile
 	return render(request, 'socialnetwork2/global.html', context)
 
 @login_required
@@ -50,19 +47,48 @@ def create(request):
 
 @login_required
 def profile(request):
-	if not 'username' in request.POST:
-		print 'no user name'
-		return render(request, 'socialnetwork/profile.html', {})
+	if request.POST.get('username', False):
+		if not 'username' in request.POST:
+			print 'no user name'
+			return render(request, 'socialnetwork/profile.html', {})
 
-	#get the username
-	username = request.POST['username']
+		#get the username
+		username = request.POST['username']
+		print 'get username'
+		#search all posts posted by that user
+		all_info = Messages.objects.filter(user__username=username).values('user_id', 'post', 'date', 'user__last_name', 'user__first_name', 'user__username').order_by('-date')
+		#all_info.order_by('-date')
+		context = {'messages': all_info}
+		#print context
+		return render(request, 'socialnetwork2/profile.html', context)
+	if request.POST.get('follow', False):
+		follow = Follow()
+		follow.user = request.user
+		follow.follows = request.POST.get('followuser', False)
+		#print follow.user, follow.follows
+		follow.save()
+		return redirect(reverse('home'))
+	if request.POST.get('unfollow', False):
+		followuser = request.POST.get('followuser', False)
+		Follow.objects.filter(user=request.user).filter(follows=followuser).delete()
+		return redirect(reverse('home'))
 
-	#search all posts posted by that user
-	all_info = Messages.objects.filter(user__username=username).values('user_id', 'post', 'date', 'user__last_name', 'user__first_name', 'user__username')
-	all_info.order_by('-date')
-	context = {'messages': all_info}
-	#print context
-	return render(request, 'socialnetwork2/profile.html', context)
+
+@login_required
+def followstream(request):
+	follows = Follow.objects.filter(user=request.user)
+	following_message = Messages.objects.none()
+
+	for p in follows:
+		following_message1 = Messages.objects.filter(user__username=p.follows).values('user_id', 'post', 'date', 'user__last_name', 'user__first_name', 'user__username')
+	 	following_message = following_message | following_message1
+	print following_message
+	
+	following_message = following_message.order_by('-date')
+	
+	profile = Profile.objects.filter(user=request.user).values('user__last_name', 'user__first_name', 'user__username', 'age', 'bio')
+	context = {'messages': following_message, 'profile': profile[0]}
+	return render(request, 'socialnetwork2/followstream.html', context)
 
 @login_required
 def editprofile(request):
@@ -81,6 +107,8 @@ def editprofile(request):
 		else:
 			profile.content_type = form.cleaned_data['picture'].content_type
 			form.save()
+			context['message'] = 'Photo saved'.format(request.user.id)
+			return render(request, 'socialnetwork2/global.html', context)
 			return redirect(reverse('home'))
 
 	except Profile.DoesNotExist:
@@ -96,6 +124,14 @@ def editprofile(request):
 	# 	return render(request, 'socialnetwork2/editprofile.html')
 	# edit_profile.save()
 	# return redirect(reverse('home'))
+
+# @login_required
+# def followstream(request):
+# 	return render(request, 'socialnetwork2/global.html', {})
+@login_required
+def get_photo(request,id):
+	profile = get_object_or_404(Profile, user=request.user)
+	return HttpResponse(profile.picture, content_type=profile.content_type)
 
 @transaction.atomic
 def register(request):

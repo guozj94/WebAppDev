@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/static/socialnetwork2/global.css">
+	<link rel="stylesheet" href="/static/socialnetwork2/profile.css">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans" />
+	<title>{% block page-title %}{% endblock %}</title>
+</head>
+<body>
+	<header>
+		<nav>
+			<ul>
+				<li>
+					<a href="">Welcome to Social Web</a>
+				</li>
+				<li>
+					<a href="/socialnetwork2/global">Home</a>
+				</li>
+				<li>
+					<a href="/socialnetwork2/editprofile">Edit Profile</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<div class="container">
+		<div class="left-col-container">
+			<div class="column">
+				<div class="row">
+				</div>
+				<table>
+					<tr>
+						<td>First Name:</td>
+						<td>{{profile.user__first_name}}</td>
+					</tr>
+					<tr>
+						<td>Last Name:</td>
+						<td>{{profile.user__last_name}}</td>
+					</tr>
+					<tr>
+						<td>Age:</td>
+						<td>{{age}}</td>
+					</tr>
+					<tr>
+						<td>Bio:</td>
+						<td>{{bio}}</td>
+					</tr>
+				</table>	
+			</div>
+		</div>
+
+		<div class="right-col-container">
+			{% block post-new %}
+			{% endblock %}
+			<ol>  <!-- insert all message HERE -->
+				{% for message in messages %}
+				<li>
+					<form method="post" action="{% url 'profile' %}">
+						<div class="row" style="background: white; margin-bottom: 10px; width: 100%;">
+						<img src="" width="150px" style="margin: 10px;">
+						<div class="column" style="width: 100%"> <!-- this is data from django database -->
+							<div class="row" id="personal">
+								<p>{{message.user__first_name}}</p>
+								<p>&nbsp</p>
+								<p>{{message.user__last_name}}</p>
+								<p>&nbsp &nbsp</p>
+								<button type="submit" name="username" id="username" value="{{message.user__username}}">{{message.user__username}}</button>
+								<p>&nbsp &nbsp</p>
+								<p style="color: grey; font-weight: 300;">{{message.date}}</p>
+							</div>
+							<div class="row" id="content">
+								<p>{{message.post}}</p>
+							</div>
+						</div>
+						</div>
+						{% csrf_token %}
+
+					</form>
+				</li>
+				{% endfor %}
+			</ol>
+
+		</div>
+
+</body>
+</html>

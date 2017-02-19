@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/static/socialnetwork2/editprofile.css">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans" />
+	<title>Edit Profile</title>
+</head>
+<body>
+	<header>
+		<nav>
+			<ul>
+				<li>
+					<a href="">Welcome to Social Web</a>
+				</li>
+				<li>
+					<a href="/socialnetwork2/global">Home</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+	<div class="container">
+		<div class="row" id="register-info">
+		<form method="post" action="">
+			<table width="600">
+				{{form}}
+			</table>
+			{% csrf_token %}
+			<div class="row">	
+				<input type="submit" value="Save">
+			</div>
+		</form>
+		</div>
+	</div>
+</body>
+</html>

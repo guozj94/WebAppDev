@@ -18,7 +18,7 @@ class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	age = models.CharField(max_length=3, blank=True)
 	bio = models.TextField(max_length=430, blank=True)
-	picture = models.FileField(upload_to="images", blank=True)
+	picture = models.FileField(upload_to="images", default='images/defaultuserpicture.png', blank=True)
 	content_type = models.CharField(max_length=50)
 
 class Follow(models.Model):

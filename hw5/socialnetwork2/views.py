@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
+from django.db import models
 
 #import login
 from django.contrib.auth.decorators import login_required
@@ -23,12 +24,15 @@ import time
 
 from django.template import RequestContext
 
+import inspect
+
 # Create your views here.
 @login_required
 def home(request):
 	all_info = []
 	all_info = Messages.objects.values('user_id', 'post', 'date', 'user__last_name', 'user__first_name', 'user__username').order_by('-date')
-	profile = Profile.objects.filter(user=request.user).values('user__last_name', 'user__first_name', 'user__username', 'age', 'bio')
+	profile = Profile.objects.filter(user=request.user).values('user__last_name','user_id', 'user__first_name', 'user__username', 'age', 'bio','picture')
+	print profile[0]['picture']
 	context = {'messages': all_info, 'profile': profile[0]}
 	return render(request, 'socialnetwork2/global.html', context)
 
@@ -52,20 +56,15 @@ def profile(request):
 			print 'no user name'
 			return render(request, 'socialnetwork/profile.html', {})
 
-		#get the username
 		username = request.POST['username']
 		print 'get username'
-		#search all posts posted by that user
 		all_info = Messages.objects.filter(user__username=username).values('user_id', 'post', 'date', 'user__last_name', 'user__first_name', 'user__username').order_by('-date')
-		#all_info.order_by('-date')
 		context = {'messages': all_info}
-		#print context
 		return render(request, 'socialnetwork2/profile.html', context)
 	if request.POST.get('follow', False):
 		follow = Follow()
 		follow.user = request.user
 		follow.follows = request.POST.get('followuser', False)
-		#print follow.user, follow.follows
 		follow.save()
 		return redirect(reverse('home'))
 	if request.POST.get('unfollow', False):
@@ -80,58 +79,51 @@ def followstream(request):
 	following_message = Messages.objects.none()
 
 	for p in follows:
-		following_message1 = Messages.objects.filter(user__username=p.follows).values('user_id', 'post', 'date', 'user__last_name', 'user__first_name', 'user__username')
+		following_message1 = Messages.objects.filter(user__username=p.follows).values('user_id', 'post', 'date', 'user__last_name', 'user__first_name', 'user__username',)
 	 	following_message = following_message | following_message1
 	print following_message
 	
 	following_message = following_message.order_by('-date')
 	
-	profile = Profile.objects.filter(user=request.user).values('user__last_name', 'user__first_name', 'user__username', 'age', 'bio')
+	profile = Profile.objects.filter(user=request.user).values('user__last_name','user_id', 'user__first_name', 'user__username', 'age', 'bio','picture')
 	context = {'messages': following_message, 'profile': profile[0]}
 	return render(request, 'socialnetwork2/followstream.html', context)
 
 @login_required
+@transaction.atomic
 def editprofile(request):
 	try:
 		if request.method == 'GET':
-			profile = Profile.objects.get(user_id=request.user)
+			profile = Profile.objects.get(user=request.user)
 			form = EditProfile(instance=profile)
 			context = {'form': form}
 			return render(request, 'socialnetwork2/editprofile.html', context)
 
-		profile = Profile.objects.select_for_update().get(user_id=request.user)
+		#profile = Profile.objects.select_for_update().get(user_id=request.user)
+		profile = Profile.objects.select_for_update().get(user=request.user)
 		form = EditProfile(request.POST, request.FILES, instance=profile)
+		context = {}
 		if not form.is_valid():
 			context = {'form': form}
 			return render(request, 'socialnetwork2/editprofile.html', context)
 		else:
-			profile.content_type = form.cleaned_data['picture'].content_type
+			print 'profile,', profile.content_type
+			print 'form', type(3)
+			try:
+				if form.cleaned_data['picture'].content_type:
+					profile.content_type = form.cleaned_data['picture'].content_type
+			except:
+				pass
 			form.save()
-			context['message'] = 'Photo saved'.format(request.user.id)
-			return render(request, 'socialnetwork2/global.html', context)
 			return redirect(reverse('home'))
 
 	except Profile.DoesNotExist:
 		return redirect(reverse('home'))
-	# if request.method == 'GET':
-	# 	context = {'form': EditProfile()}
-	# 	return render(request, 'socialnetwork2/editprofile.html', context)
 
-	# profile = Profile(user=request.user)
-	# edit_profile = EditProfile(request.POST, instance=profile)
-	# if not edit_profile.is_valid():
-	# 	context = {'form': edit_profile}
-	# 	return render(request, 'socialnetwork2/editprofile.html')
-	# edit_profile.save()
-	# return redirect(reverse('home'))
-
-# @login_required
-# def followstream(request):
-# 	return render(request, 'socialnetwork2/global.html', {})
 @login_required
 def get_photo(request,id):
-	profile = get_object_or_404(Profile, user=request.user)
-	return HttpResponse(profile.picture, content_type=profile.content_type)
+	user = get_object_or_404(User, id=id)
+	return HttpResponse(user.profile.picture, content_type=user.profile.content_type)
 
 @transaction.atomic
 def register(request):

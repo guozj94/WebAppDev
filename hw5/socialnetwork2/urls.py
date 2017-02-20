@@ -6,8 +6,6 @@ urlpatterns = [
     url(r'^$', socialnetwork_views.home, name='home'),
     #default page
     url(r'^global$', socialnetwork_views.home, name='global'),
-    #follow a user
-    #url(r'^follow$', socialnetwork_views.follow, name='follow'),
     #show all followers
     url(r'^followstream$', socialnetwork_views.followstream, name='followstream'),
     #create new post

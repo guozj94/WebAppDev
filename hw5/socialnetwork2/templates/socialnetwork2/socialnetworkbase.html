@@ -35,7 +35,7 @@
 		<div class="left-col-container">
 			<div class="column">
 				<div class="row">
-					<img src="{% url 'photo' profile.user__user_id" width="150px">
+					<img src="{% url 'photo' profile.user_id %}" width="150px" height="150px">
 				</div>
 				<br>
 				<table>
@@ -67,7 +67,7 @@
 				<li>
 					<form method="post" action="{% url 'profile' %}">
 						<div class="row" style="background: white; margin-bottom: 10px; width: 100%;">
-						<img src="" width="150px" style="margin: 10px;">
+						<img src="{% url 'photo' message.user_id %}" width="100px" height="100px" style="margin: 10px;">
 						<div class="column" style="width: 100%"> <!-- this is data from django database -->
 							<div class="row" id="personal">
 								<p>{{message.user__first_name}}</p>

@@ -14,6 +14,12 @@ class Messages(models.Model):
 	def __unicode__(self):
 		return 'user=' + str(self.id) + ',post="' + self.post + '"'
 
+class Comments(models.Model):
+	relatedmessage = models.ForeignKey(Messages, default=None, related_name='relatedmessage')
+	user = models.ForeignKey(User, default=None, related_name='user')
+	commentdate = models.DateTimeField(auto_now_add=True)
+	comment = models.TextField(max_length=200, default=None)
+
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	age = models.CharField(max_length=3, blank=True)

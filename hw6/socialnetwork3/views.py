@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
@@ -34,37 +34,34 @@ from django.template import RequestContext
 import inspect
 
 # Create your views here.
+@ensure_csrf_cookie
 @login_required
 def home(request):
-	#all_info = []
-	all_info = Messages.objects.values('user_id', 'post', 'date', 'user__last_name', 'user__first_name', 'user__username').order_by('-date')
-	profile = Profile.objects.filter(user=request.user).values('user__last_name','user_id', 'user__first_name', 'user__username', 'age', 'bio','picture')
-	all_objects = list(Messages.objects.all()) + list(User.objects.all())
-	response_text = serializers.serialize('json', all_objects, fields=('user', 'post', 'date', 'last_name', 'first_name', 'username'))
-	tryjson = []
-	for x in all_info:
-		a = {'post': x['post'], 'date': x['date'], 'last_name': x['user__last_name'], 'first_name': x['user__first_name'], 'username': x['user__username']}
-		tryjson.append(a)
-	#print json.dumps(tryjson, cls=DjangoJSONEncoder)
-	jsonobj = json.dumps(tryjson, cls=DjangoJSONEncoder)
-	#print "serialize",response_text
+	all_info = Messages.objects.values('id','user_id', 'post', 'date', 'user__last_name', 'user__first_name', 'user__username').order_by('-date')
+	profile = get_list_or_404(Profile.objects.filter(user=request.user).values('user__last_name','user_id', 'user__first_name', 'user__username', 'age', 'bio','picture'))
 	context = {'messages': all_info, 'profile': profile[0]}
 	return render(request, 'socialnetwork3/global.html', context)
 
 @login_required
 def getstream(request):
-	all_info = Messages.objects.values('user_id', 'post', 'date', 'user__last_name', 'user__first_name', 'user__username').order_by('-date')
+	all_messages = Messages.objects.values('id', 'user_id', 'post', 'date', 'user__last_name', 'user__first_name', 'user__username').order_by('-date')
 	tryjson = []
-	for x in all_info:
-		a = {'user_id': x['user_id'], 'post': x['post'], 'date': x['date'], 'last_name': x['user__last_name'], 'first_name': x['user__first_name'], 'username': x['user__username']}
+	for x in all_messages:
+		comments_to_x = Comments.objects.filter(relatedmessage=x['id']).values('commentdate', 'comment', 'user_id', 'user__last_name', 'user__first_name').order_by('commentdate')
+		#print comments_to_x
+		comments = []
+		for y in comments_to_x:
+			comments.append(y)
+		a = {'id': x['id'], 'user_id': x['user_id'], 'post': x['post'], 'date': x['date'], 'last_name': x['user__last_name'], 'first_name': x['user__first_name'], 'username': x['user__username'], 'comments': comments}
 		tryjson.append(a)
 	jsonobj = json.dumps(tryjson, cls=DjangoJSONEncoder)
+	print jsonobj
 	return HttpResponse(jsonobj, content_type='application/json')
 
 @login_required
 def create(request):
 	if not request.POST['input-content']:
-		print 'no content'
+		return render(request, 'socialnetwork3/global.html', {'errors': 'You have to create content'})
 	else:
 		#create a new instance of Messages
 		print 'create new content'
@@ -75,16 +72,50 @@ def create(request):
 	return redirect(reverse('home'))
 
 @login_required
+@ensure_csrf_cookie
+def create_ajax(request):
+	errors = []
+
+	if not request.POST['content']:
+		message = 'You must create some content'
+		json_error = '{ "error": "'+message+'" }'
+		return HttpResponse(json_error, content_type='application/json')
+
+	message = Messages()
+	message.user = request.user
+	message.post = request.POST['content'][:200]
+	message.save()
+	return HttpResponse('{ "success": "true" }', content_type='application/json')
+
+@login_required
+@ensure_csrf_cookie
+def create_comment_ajax(request):
+	errors = []
+
+	if not request.POST['comment']:
+		message = 'You must input a comment'
+		json_error = '{ "error": "'+message+'" }'
+		return HttpResponse(json_error, content_type='application/json')
+
+	relate_message = Messages.objects.get(id=request.POST['comment_to_message'])
+	new_comment = Comments()
+	new_comment.user = request.user
+	new_comment.relatedmessage = relate_message
+	new_comment.comment = request.POST['comment']
+	new_comment.save()
+	return HttpResponse('{ "success": "true" }', content_type='application/json')
+
+
+
+@login_required
 def profile(request):
 	if request.POST.get('username', False):
 		if not 'username' in request.POST:
-			print 'no user name'
-			return render(request, 'socialnetwork3/profile.html', {})
+			return render(request, 'socialnetwork3/global.html', {'errors': 'No user name'})
 
 		username = request.POST['username']
-		print 'get username'
 		all_info = Messages.objects.filter(user__username=username).values('user_id', 'post', 'date', 'user__last_name', 'user__first_name', 'user__username').order_by('-date')
-		profile = Profile.objects.filter(user__username=username).values('user__last_name','user_id', 'user__first_name', 'user__username', 'age', 'bio','picture')
+		profile = get_list_or_404(Profile.objects.filter(user__username=username).values('user__last_name','user_id', 'user__first_name', 'user__username', 'age', 'bio','picture'))
 		context = {'messages': all_info, 'profile': profile[0]}
 		return render(request, 'socialnetwork3/profile.html', context)
 	if request.POST.get('follow', False):
@@ -102,7 +133,6 @@ def profile(request):
 @login_required
 def followstream(request):
 	follows = Follow.objects.filter(user=request.user)
-	print 'follows',follows
 	following_message = Messages.objects.none()
 
 	for p in follows:
@@ -126,8 +156,7 @@ def editprofile(request):
 			context = {'form': form}
 			return render(request, 'socialnetwork3/editprofile.html', context)
 
-		#profile = Profile.objects.select_for_update().get(user_id=request.user)
-		profile = Profile.objects.select_for_update().get(user=request.user)
+		profile = get_object_or_404(Profile.objects.select_for_update().get(user=request.user))
 		form = EditProfile(request.POST, request.FILES, instance=profile)
 		context = {}
 		if not form.is_valid():

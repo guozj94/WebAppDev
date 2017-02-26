@@ -33,6 +33,10 @@
 		</nav>
 	</header>
 
+	<div class="error" style="color: red;"></div>
+	{% for error in errors %}
+	<p style="color: red;">{{error}}</p>
+	{% endfor %}
 	<div class="container">
 		<div class="left-col-container">
 			<div class="column">

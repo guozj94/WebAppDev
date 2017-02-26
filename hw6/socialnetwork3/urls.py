@@ -12,6 +12,10 @@ urlpatterns = [
     url(r'^followstream$', socialnetwork_views.followstream, name='followstream'),
     #create new post
     url(r'^create$', socialnetwork_views.create, name='create'),
+    #create new post using ajax
+    url(r'^create_ajax$', socialnetwork_views.create_ajax, name='create_ajax'),
+    #create new comment using ajax
+    url(r'^create_comment_ajax$', socialnetwork_views.create_comment_ajax, name='create_comment_ajax'),
     #route to login page
     url(r'^login$', auth_views.login, {'template_name':'socialnetwork3/login.html'}, name='login'),
     #logout

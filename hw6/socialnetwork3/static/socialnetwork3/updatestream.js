@@ -120,12 +120,6 @@ function create() {
     });
 }
 
-function clickall() {
-	$("html").click(function() {
-		alert("fuck");
-	});
-}
-
 function sanitize(s) {
     // Be sure to replace ampersand first
     return s.replace(/&/g, '&amp;')

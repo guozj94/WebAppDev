@@ -4,11 +4,15 @@ from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
 from django.db import models
 
+#object does not exist
 from django.core.exceptions import ObjectDoesNotExist
+
+#python and django serializers
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 import json
 
+#csrf token
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 #import login
@@ -163,8 +167,6 @@ def editprofile(request):
 			context = {'form': form}
 			return render(request, 'socialnetwork3/editprofile.html', context)
 		else:
-			print 'profile,', profile.content_type
-			print 'form', type(3)
 			try:
 				if form.cleaned_data['picture'].content_type:
 					profile.content_type = form.cleaned_data['picture'].content_type

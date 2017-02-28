@@ -160,7 +160,7 @@ def editprofile(request):
 			context = {'form': form}
 			return render(request, 'socialnetwork3/editprofile.html', context)
 
-		profile = get_object_or_404(Profile.objects.select_for_update().get(user=request.user))
+		profile = get_object_or_404(Profile, user=request.user)
 		form = EditProfile(request.POST, request.FILES, instance=profile)
 		context = {}
 		if not form.is_valid():

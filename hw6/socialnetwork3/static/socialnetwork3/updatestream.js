@@ -138,6 +138,17 @@ function getCSRFToken() {
     return "unknown";
 }
 
+function isInputEmpty() {
+	var isInputEmpty_flag = true;
+	$(".create-new-comment-input").each(function() {
+		if($(this).val()) {
+			isInputEmpty_flag = false;
+			return false;
+		}
+	});
+	return isInputEmpty_flag;
+}
+
 $(document).ready(function() {
 	var keypress_flag = false;
 	console.log("ready");
@@ -146,17 +157,16 @@ $(document).ready(function() {
 	create_comment();
 	reload = setInterval(getStream, 5000);
 	$(document).on("click", ".create-new-comment-submit", function() {
+		clearInterval(reload);
 		reload = setInterval(getStream, 5000);
 	});
-	$(document).keypress(function() {
-		clearInterval(reload);
-		if(keypress_flag) clearInterval(reload_after_press);
-		setTimeout(function() {}, 5000);
-		reload_after_press = setInterval(getStream, 5000);
-		keypress_flag = true;
-		$(".create-new-comment-input").each(function() {
-			if($(this).val()) clearInterval(reload_after_press);
-		});
-	});
-	
+	setInterval(function() {
+		if(isInputEmpty()) {
+			clearInterval(reload);
+			getStream();
+		}
+		else {
+			clearInterval(reload);
+		}
+	}, 5000);
 });

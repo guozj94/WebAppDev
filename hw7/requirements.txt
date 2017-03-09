@@ -1,0 +1,11 @@
+appdirs==1.4.2
+boto==2.46.1
+Django==1.10.6
+django-storages==1.5.2
+gunicorn==19.7.0
+packaging==16.8
+psycopg2==2.7
+pyparsing==2.1.10
+requests==2.13.0
+six==1.10.0
+whitenoise==3.3.0

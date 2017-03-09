@@ -9,3 +9,10 @@ environment vars stored in heroku config
 no credential information on github
 
 tried digital ocean but failed, used heroku and s3 instead
+
+Resources:
+https://www.caktusgroup.com/blog/2014/11/10/Using-Amazon-S3-to-store-your-Django-sites-static-and-media-files/
+https://www.youtube.com/watch?v=8Qcqh0jl5YU
+https://devcenter.heroku.com/articles/django-app-configuration#migrating-an-existing-django-project
+https://www.digitalocean.com/community/tutorials/how-to-use-the-django-one-click-install-image
+Also Vivian's step-by-step tutorial 
